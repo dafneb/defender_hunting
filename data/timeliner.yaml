@@ -11,3 +11,15 @@ attribute_mappings:
 - name: 'timestamp'
   description: 'Timestamp'
 place_holder_event: true
+---
+data_type: 'defender:advanced_hunting:connfailed'
+attribute_mappings:
+- name: 'timestamp'
+  description: 'Timestamp'
+place_holder_event: true
+---
+data_type: 'defender:advanced_hunting:connsuccess'
+attribute_mappings:
+- name: 'timestamp'
+  description: 'Timestamp'
+place_holder_event: true

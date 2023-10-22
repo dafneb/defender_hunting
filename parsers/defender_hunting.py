@@ -88,6 +88,114 @@ class DefenderAdvancedHuntingAsrTheftAuditedEventData(events.EventData):
         self.initiatingprocessparentcreationtime = None
         self.additionalfields = None
 
+class DefenderAdvancedHuntingConnFailedEventData(events.EventData):
+    """Parser for M365 Defender Advanced hunting event data.
+
+	Action type = ConnectionFailed
+
+    Attributes:
+        timestamp (dfdatetime): timestamp of event [required]
+        deviceid (str): device id [required]
+        devicename (str): device name [required]
+        initiatingprocessaccountdomain (str): identity domain for initiating process [optional]
+        initiatingprocessaccountname (str): identity name for initiating process [optional]
+        initiatingprocesssha256 (str): sha256 of initiating process file [optional]
+        initiatingprocessfilename (str): file name of initiating process [optional]
+        initiatingprocessid (str): initiating process id (ppid) [optional]
+        initiatingprocesscommandline (str): command-line for initiating process [optional]
+        initiatingprocesscreationtime (str): date and time for initiating process creation [optional]
+        initiatingprocessfolderpath (str): folder path of initiating process [optional]
+        initiatingprocessparentid (str): parent process id (pppid) [optional]
+        initiatingprocessparentfilename (str): file name of parent process [optional]
+        initiatingprocessparentcreationtime (str): date and time for parent process creation [optional]
+        remoteip (str): remote ip address [optional]
+        remoteport (str): remote port [optional]
+        remoteurl (str): remote url address [optional]
+        localip (str): local ip address [optional]
+        localport (str): local port [optional]
+        protocol (str): used protocol [optional]
+    """
+
+    DATA_TYPE = 'defender:advanced_hunting:connfailed'
+
+    def __init__(self):
+        """Initializes event data."""
+        super(DefenderAdvancedHuntingConnFailedEventData, self).__init__(data_type=self.DATA_TYPE)
+        self.timestamp = None
+        self.deviceid = None
+        self.devicename = None
+        self.initiatingprocessaccountdomain = None
+        self.initiatingprocessaccountname = None
+        self.initiatingprocesssha256 = None
+        self.initiatingprocessfilename = None
+        self.initiatingprocessid = None
+        self.initiatingprocesscommandline = None
+        self.initiatingprocesscreationtime = None
+        self.initiatingprocessfolderpath = None
+        self.initiatingprocessparentid = None
+        self.initiatingprocessparentfilename = None
+        self.initiatingprocessparentcreationtime = None
+        self.remoteip = None
+        self.remoteport = None
+        self.remoteurl = None
+        self.localip = None
+        self.localport = None
+        self.protocol = None
+
+class DefenderAdvancedHuntingConnSuccessEventData(events.EventData):
+    """Parser for M365 Defender Advanced hunting event data.
+
+	Action type = ConnectionSuccess
+
+    Attributes:
+        timestamp (dfdatetime): timestamp of event [required]
+        deviceid (str): device id [required]
+        devicename (str): device name [required]
+        initiatingprocessaccountdomain (str): identity domain for initiating process [optional]
+        initiatingprocessaccountname (str): identity name for initiating process [optional]
+        initiatingprocesssha256 (str): sha256 of initiating process file [optional]
+        initiatingprocessfilename (str): file name of initiating process [optional]
+        initiatingprocessid (str): initiating process id (ppid) [optional]
+        initiatingprocesscommandline (str): command-line for initiating process [optional]
+        initiatingprocesscreationtime (str): date and time for initiating process creation [optional]
+        initiatingprocessfolderpath (str): folder path of initiating process [optional]
+        initiatingprocessparentid (str): parent process id (pppid) [optional]
+        initiatingprocessparentfilename (str): file name of parent process [optional]
+        initiatingprocessparentcreationtime (str): date and time for parent process creation [optional]
+        remoteip (str): remote ip address [optional]
+        remoteport (str): remote port [optional]
+        remoteurl (str): remote url address [optional]
+        localip (str): local ip address [optional]
+        localport (str): local port [optional]
+        protocol (str): used protocol [optional]
+    """
+
+    DATA_TYPE = 'defender:advanced_hunting:connsuccess'
+
+    def __init__(self):
+        """Initializes event data."""
+        super(DefenderAdvancedHuntingConnSuccessEventData, self).__init__(data_type=self.DATA_TYPE)
+        self.timestamp = None
+        self.deviceid = None
+        self.devicename = None
+        self.initiatingprocessaccountdomain = None
+        self.initiatingprocessaccountname = None
+        self.initiatingprocesssha256 = None
+        self.initiatingprocessfilename = None
+        self.initiatingprocessid = None
+        self.initiatingprocesscommandline = None
+        self.initiatingprocesscreationtime = None
+        self.initiatingprocessfolderpath = None
+        self.initiatingprocessparentid = None
+        self.initiatingprocessparentfilename = None
+        self.initiatingprocessparentcreationtime = None
+        self.remoteip = None
+        self.remoteport = None
+        self.remoteurl = None
+        self.localip = None
+        self.localport = None
+        self.protocol = None
+
 class DefenderAdvancedHuntingParser(interface.FileObjectParser):
     """Parser for M365 Defender Advanced hunting files."""
 
@@ -141,8 +249,14 @@ class DefenderAdvancedHuntingParser(interface.FileObjectParser):
         Raises:
             ParseError: if a valid date and time value cannot be derived from the time elements.
         """
+
+        if self._testing != 0 :
+            logger.info('request for parse time ...')
+            logger.info('structure: {0!s}'.format(
+                time_elements_structure))
+
         try:
-            year, month, day_of_month, hours, minutes, seconds = (
+            year, month, day_of_month, hours, minutes, seconds, miliseconds = (
                 time_elements_structure)
 
             # Ensure time_elements_tuple is not a pyparsing.ParseResults otherwise
@@ -190,12 +304,21 @@ class DefenderAdvancedHuntingParser(interface.FileObjectParser):
             'ServiceInstalled']
         
         if values['ActionType'] not in allowed_actions:
-            raise errors.WrongParser(
-                '¨Not allowed action: {0!s}'.format(
+            parser_mediator.ProduceExtractionWarning(
+                'Not allowed action: {0!s}'.format(
                     values['ActionType']))
 
         if values['ActionType'] == "AntivirusScanCompleted":
             self._ParseValuesAntivirusScanCompleted(parser_mediator, values)
+
+        if values['ActionType'] == "AsrLsassCredentialTheftAudited":
+            self._ParseValuesAsrTheftAudited(parser_mediator, values)
+            
+        if values['ActionType'] == "ConnectionFailed":
+            self._ParseValuesConnFailed(parser_mediator, values)
+
+        if values['ActionType'] == "ConnectionSuccess":
+            self._ParseValuesConnSuccess(parser_mediator, values)
             
     def _ParseValuesAntivirusScanCompleted(self, parser_mediator, values):
         """Parses M365 Defender Advanced hunting values.
@@ -215,6 +338,113 @@ class DefenderAdvancedHuntingParser(interface.FileObjectParser):
         event_data.deviceid = values['DeviceId']
         event_data.devicename = values['DeviceName']
         event_data.additionalfields = values['AdditionalFields']        
+
+        parser_mediator.ProduceEventData(event_data)
+
+    def _ParseValuesAsrTheftAudited(self, parser_mediator, values):
+        """Parses M365 Defender Advanced hunting values.
+
+        Action type = AsrLsassCredentialTheftAudited
+
+        Args:
+            values (list[str]): values extracted from the line.
+
+        """
+
+        resultTimeParse = self._TIMESTAMP.parseString(values['Timestamp'])        
+        time_elements_structure = resultTimeParse['timestamp']
+
+        event_data = DefenderAdvancedHuntingAsrTheftAuditedEventData()
+        event_data.timestamp = self._ParseTimeElements(time_elements_structure)
+        event_data.deviceid = values['DeviceId']
+        event_data.devicename = values['DeviceName']
+        event_data.filename = values['FileName']
+        event_data.folderpath = values['FolderPath']
+        event_data.processcommandline = values['ProcessCommandLine']
+        event_data.initiatingprocessaccountdomain = values['InitiatingProcessAccountDomain']
+        event_data.initiatingprocessaccountname = values['InitiatingProcessAccountName']
+        event_data.initiatingprocesssha256 = values['InitiatingProcessSHA256']
+        event_data.initiatingprocessfilename = values['InitiatingProcessFileName']
+        event_data.initiatingprocessid = values['InitiatingProcessId']
+        event_data.initiatingprocesscommandline = values['InitiatingProcessCommandLine']
+        event_data.initiatingprocesscreationtime = values['InitiatingProcessCreationTime']
+        event_data.initiatingprocessfolderpath = values['InitiatingProcessFolderPath']
+        event_data.initiatingprocessparentid = values['InitiatingProcessParentId']
+        event_data.initiatingprocessparentfilename = values['InitiatingProcessParentFileName']
+        event_data.initiatingprocessparentcreationtime = values['InitiatingProcessParentCreationTime']
+        event_data.additionalfields = values['AdditionalFields']        
+
+        parser_mediator.ProduceEventData(event_data)
+
+    def _ParseValuesConnFailed(self, parser_mediator, values):
+        """Parses M365 Defender Advanced hunting values.
+
+        Action type = ConnectionFailed
+
+        Args:
+            values (list[str]): values extracted from the line.
+
+        """
+        resultTimeParse = self._TIMESTAMP.parseString(values['Timestamp'])        
+        time_elements_structure = resultTimeParse['timestamp']
+
+        event_data = DefenderAdvancedHuntingConnFailedEventData()
+        event_data.timestamp = self._ParseTimeElements(time_elements_structure)
+        event_data.deviceid = values['DeviceId']
+        event_data.devicename = values['DeviceName']
+        event_data.initiatingprocessaccountdomain = values['InitiatingProcessAccountDomain']
+        event_data.initiatingprocessaccountname = values['InitiatingProcessAccountName']
+        event_data.initiatingprocesssha256 = values['InitiatingProcessSHA256']
+        event_data.initiatingprocessfilename = values['InitiatingProcessFileName']
+        event_data.initiatingprocessid = values['InitiatingProcessId']
+        event_data.initiatingprocesscommandline = values['InitiatingProcessCommandLine']
+        event_data.initiatingprocesscreationtime = values['InitiatingProcessCreationTime']
+        event_data.initiatingprocessfolderpath = values['InitiatingProcessFolderPath']
+        event_data.initiatingprocessparentid = values['InitiatingProcessParentId']
+        event_data.initiatingprocessparentfilename = values['InitiatingProcessParentFileName']
+        event_data.initiatingprocessparentcreationtime = values['InitiatingProcessParentCreationTime']
+        event_data.remoteip = values['RemoteIP']
+        event_data.remoteport = values['RemotePort']
+        event_data.remoteurl = values['RemoteUrl']
+        event_data.localip = values['LocalIP']
+        event_data.localport = values['LocalPort']
+        event_data.protocol = values['Protocol']
+
+        parser_mediator.ProduceEventData(event_data)
+    
+    def _ParseValuesConnSuccess(self, parser_mediator, values):
+        """Parses M365 Defender Advanced hunting values.
+
+        Action type = ConnectionSuccess
+
+        Args:
+            values (list[str]): values extracted from the line.
+
+        """     
+        resultTimeParse = self._TIMESTAMP.parseString(values['Timestamp'])        
+        time_elements_structure = resultTimeParse['timestamp']
+
+        event_data = DefenderAdvancedHuntingConnSuccessEventData()
+        event_data.timestamp = self._ParseTimeElements(time_elements_structure)
+        event_data.deviceid = values['DeviceId']
+        event_data.devicename = values['DeviceName']
+        event_data.initiatingprocessaccountdomain = values['InitiatingProcessAccountDomain']
+        event_data.initiatingprocessaccountname = values['InitiatingProcessAccountName']
+        event_data.initiatingprocesssha256 = values['InitiatingProcessSHA256']
+        event_data.initiatingprocessfilename = values['InitiatingProcessFileName']
+        event_data.initiatingprocessid = values['InitiatingProcessId']
+        event_data.initiatingprocesscommandline = values['InitiatingProcessCommandLine']
+        event_data.initiatingprocesscreationtime = values['InitiatingProcessCreationTime']
+        event_data.initiatingprocessfolderpath = values['InitiatingProcessFolderPath']
+        event_data.initiatingprocessparentid = values['InitiatingProcessParentId']
+        event_data.initiatingprocessparentfilename = values['InitiatingProcessParentFileName']
+        event_data.initiatingprocessparentcreationtime = values['InitiatingProcessParentCreationTime']
+        event_data.remoteip = values['RemoteIP']
+        event_data.remoteport = values['RemotePort']
+        event_data.remoteurl = values['RemoteUrl']
+        event_data.localip = values['LocalIP']
+        event_data.localport = values['LocalPort']
+        event_data.protocol = values['Protocol']
 
         parser_mediator.ProduceEventData(event_data)
 
