@@ -15,7 +15,7 @@ class DefenderAdvancedHuntingParserTest(test_lib.ParserTestCase):
     def testProcess(self):
         """Tests the Process function."""
         plugin = defender_hunting.DefenderAdvancedHuntingParser()
-        plugin.SetTest(1)
+        #plugin.SetTest(1) # Enabled noisy mode for test - you will get huge amount of informations
         storage_writer = self._ParseFile(['advanced_hunting_test.csv'], plugin)
 
         number_of_event_data = storage_writer.GetNumberOfAttributeContainers(

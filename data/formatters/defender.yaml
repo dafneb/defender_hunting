@@ -1,0 +1,23 @@
+# Plaso event formatters.
+---
+type: 'conditional'
+data_type: 'defender:advanced_hunting:scancomplete'
+message:
+- 'Antivirus scan completed'
+- 'Additional Fields: {additionalfields}'
+short_message:
+- 'Antivirus scan completed'
+short_source: 'EVT'
+source: 'M365 Advanced Hunting'
+---
+type: 'conditional'
+data_type: 'defender:advanced_hunting:asrtheftaudited'
+message:
+- 'ASR - Credential theft audited'
+- 'File name: {filename}'
+- 'Folder path: {folderpath}'
+- 'Additional Fields: {additionalfields}'
+short_message:
+- 'ASR - Credential theft audited'
+short_source: 'EVT'
+source: 'M365 Advanced Hunting'

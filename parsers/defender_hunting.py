@@ -16,22 +16,40 @@ from plaso.parsers import interface
 from plaso.parsers import manager
 from plaso.parsers import logger
 
-class DefenderAdvancedHuntingEventData(events.EventData):
+class DefenderAdvancedHuntingScanCompletedEventData(events.EventData):
     """Parser for M365 Defender Advanced hunting event data.
+    
+    Action type = AntivirusScanCompleted
+
+    Attributes:
+        timestamp (dfdatetime): timestamp of event 
+        deviceid (str): device id
+        devicename (str): device name
+        additionalfields (str): additional fileds
+    """
+
+    DATA_TYPE = 'defender:advanced_hunting:scancomplete'
+
+    def __init__(self):
+        """Initializes event data."""
+        super(DefenderAdvancedHuntingScanCompletedEventData, self).__init__(data_type=self.DATA_TYPE)
+        self.timestamp = None
+        self.deviceid = None
+        self.devicename = None
+        self.additionalfields = None
+
+class DefenderAdvancedHuntingAsrTheftAuditedEventData(events.EventData):
+    """Parser for M365 Defender Advanced hunting event data.
+
+	Action type = AsrLsassCredentialTheftAudited
 
     Attributes:
         timestamp (dfdatetime): timestamp of event [required]
         deviceid (str): device id [required]
         devicename (str): device name [required]
-        actiontype (str): type of event [required]
         filename (str): file name of process [optional]
         folderpath (str): folder path of process [optional]
-        sha256 (str): sha256 of process file [optional]
-        processid (str): process id (pid) [optional]
         processcommandline (str): command-line for process [optional]
-        processcreationtime (str): date and time for process creation [optional]
-        accountdomain (str): identity domain for process [optional]
-        accountname (str): identity name for process [optional]
         initiatingprocessaccountdomain (str): identity domain for initiating process [optional]
         initiatingprocessaccountname (str): identity name for initiating process [optional]
         initiatingprocesssha256 (str): sha256 of initiating process file [optional]
@@ -43,39 +61,20 @@ class DefenderAdvancedHuntingEventData(events.EventData):
         initiatingprocessparentid (str): parent process id (pppid) [optional]
         initiatingprocessparentfilename (str): file name of parent process [optional]
         initiatingprocessparentcreationtime (str): date and time for parent process creation [optional]
-        remoteip (str): remote ip address [optional]
-        remoteport (str): remote port [optional]
-        remoteurl (str): remote url address [optional]
-        localip (str): local ip address [optional]
-        localport (str): local port [optional]
-        protocol (str): used protocol [optional]
-        remotedevicename (str): device name of caller [optional]
-        registrykey (str): registry key [optional]
-        registryvaluename (str): registry value [optional]
-        registryvaluedata (str): registry data [optional]
-        fileoriginurl (str): original url of file [optional]
-        fileoriginip (str): original ip of file [optional]
-        powershellcommand (str): powershell command [additional value]
-        dnsquery (str): dns query [additional value]
+        additionalfields (str): additional fileds
     """
 
-    DATA_TYPE = 'defender:advanced_hunting:line'
+    DATA_TYPE = 'defender:advanced_hunting:asrtheftaudited'
 
     def __init__(self):
         """Initializes event data."""
-        super(DefenderAdvancedHuntingEventData, self).__init__(data_type=self.DATA_TYPE)
+        super(DefenderAdvancedHuntingAsrTheftAuditedEventData, self).__init__(data_type=self.DATA_TYPE)
         self.timestamp = None
         self.deviceid = None
         self.devicename = None
-        self.actiontype = None
         self.filename = None
         self.folderpath = None
-        self.sha256 = None
-        self.processid = None
         self.processcommandline = None
-        self.processcreationtime = None
-        self.accountdomain = None
-        self.accountname = None
         self.initiatingprocessaccountdomain = None
         self.initiatingprocessaccountname = None
         self.initiatingprocesssha256 = None
@@ -87,20 +86,7 @@ class DefenderAdvancedHuntingEventData(events.EventData):
         self.initiatingprocessparentid = None
         self.initiatingprocessparentfilename = None
         self.initiatingprocessparentcreationtime = None
-        self.remoteip = None
-        self.remoteport = None
-        self.remoteurl = None
-        self.localip = None
-        self.localport = None
-        self.protocol = None
-        self.remotedevicename = None
-        self.registrykey = None
-        self.registryvaluename = None
-        self.registryvaluedata = None
-        self.fileoriginurl = None
-        self.fileoriginip = None
-        self.powershellcommand = None
-        self.dnsquery = None
+        self.additionalfields = None
 
 class DefenderAdvancedHuntingParser(interface.FileObjectParser):
     """Parser for M365 Defender Advanced hunting files."""
@@ -174,16 +160,20 @@ class DefenderAdvancedHuntingParser(interface.FileObjectParser):
             raise errors.ParseError(
                 'Unable to parse time elements with error: {0!s}'.format(exception))
 
-    def _ParseValues(self, values):
+    def _ParseValues(self, parser_mediator, values):
         """Parses M365 Defender Advanced hunting values.
 
         Args:
             values (list[str]): values extracted from the line.
+
+        Raises:
+            WrongParser: when the line cannot be parsed.
         """
 
         if self._testing != 0 :
             logger.info('request for parse values ...')
-            logger.info(values['ActionType'])
+            logger.info('action: {0!s}'.format(
+                values['ActionType']))
 
         allowed_actions = [
             'AntivirusScanCompleted',
@@ -198,6 +188,35 @@ class DefenderAdvancedHuntingParser(interface.FileObjectParser):
             'ProcessCreated',
             'ProcessCreatedUsingWmiQuery',
             'ServiceInstalled']
+        
+        if values['ActionType'] not in allowed_actions:
+            raise errors.WrongParser(
+                '¨Not allowed action: {0!s}'.format(
+                    values['ActionType']))
+
+        if values['ActionType'] == "AntivirusScanCompleted":
+            self._ParseValuesAntivirusScanCompleted(parser_mediator, values)
+            
+    def _ParseValuesAntivirusScanCompleted(self, parser_mediator, values):
+        """Parses M365 Defender Advanced hunting values.
+
+        Action type = AntivirusScanCompleted
+
+        Args:
+            values (list[str]): values extracted from the line.
+
+        """
+
+        resultTimeParse = self._TIMESTAMP.parseString(values['Timestamp'])        
+        time_elements_structure = resultTimeParse['timestamp']
+
+        event_data = DefenderAdvancedHuntingScanCompletedEventData()
+        event_data.timestamp = self._ParseTimeElements(time_elements_structure)
+        event_data.deviceid = values['DeviceId']
+        event_data.devicename = values['DeviceName']
+        event_data.additionalfields = values['AdditionalFields']        
+
+        parser_mediator.ProduceEventData(event_data)
 
     def ParseFileObject(self, parser_mediator, file_object):
         """Parses M365 Defender Advanced hunting file.
@@ -246,17 +265,23 @@ class DefenderAdvancedHuntingParser(interface.FileObjectParser):
                 'unable to parse line with error: {0!s}'.format(
                     exception))
 
-        data_lines = line_reader.readlines()
-        separator = '\r\n'
-        csv_lines = data_line + "\r\n" + separator.join(data_lines)
-        
         if self._testing != 0 :
             logger.info('generating whole csv ...')
+
+        data_lines = line_reader.readlines()
+        separator = '\r\n'
+        csv_lines = header_line + "\r\n" + data_line + "\r\n" + separator.join(data_lines)
+        
+        if self._testing != 0 :
             logger.info('whole csv: {0!s}'.format(
                 csv_lines))
-        #reader = csv.DictReader(data_lines)
-        #for row in reader:
-        #    self._ParseValues(row)
+            
+        reader = csv.DictReader(io.StringIO(csv_lines))
+        for row in reader:
+            if self._testing != 0 :
+                logger.info('row: {0!s}'.format(
+                    row))
+            self._ParseValues(parser_mediator, row)
 
     def SetTest(self, value):
         self._testing = value
