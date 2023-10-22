@@ -1,0 +1,52 @@
+# Plaso event formatters.
+---
+type: 'conditional'
+data_type: 'defender:advanced_hunting:scancomplete'
+message:
+- 'Antivirus scan completed'
+short_message:
+- 'Antivirus scan completed'
+short_source: 'EVT'
+source: 'M365 Advanced Hunting'
+---
+type: 'conditional'
+data_type: 'defender:advanced_hunting:asrtheftaudited'
+message:
+- 'ASR - Credential theft audited for process: {filename}'
+- ' Folder path: {folderpath}'
+short_message:
+- 'ASR - Credential theft audited for process {filename}'
+short_source: 'EVT'
+source: 'M365 Advanced Hunting'
+---
+type: 'conditional'
+data_type: 'defender:advanced_hunting:connfailed'
+message:
+- 'Connection failed for process {initiatingprocessfilename}'
+- ' Folder path: {initiatingprocessfolderpath}'
+- ' Connection: {protocol}'
+- ' {localip}'
+- ':{localport}'
+- ' -> {remoteip}'
+- ':{remoteport}'
+- ' URL: {remoteurl}'
+short_message:
+- 'Connection failed for process {initiatingprocessfilename}'
+short_source: 'EVT'
+source: 'M365 Advanced Hunting'
+---
+type: 'conditional'
+data_type: 'defender:advanced_hunting:connsuccess'
+message:
+- 'Connection failed for process {initiatingprocessfilename}'
+- ' Folder path: {initiatingprocessfolderpath}'
+- ' Connection: {protocol}'
+- ' {localip}'
+- ':{localport}'
+- ' -> {remoteip}'
+- ':{remoteport}'
+- ' URL: {remoteurl}'
+short_message:
+- 'Connection successfull for process {initiatingprocessfilename}'
+short_source: 'EVT'
+source: 'M365 Advanced Hunting'
