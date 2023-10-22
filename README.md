@@ -3,6 +3,27 @@ Plaso (log2timeline) - Parser for M365 Defender Advanced hunting export file
 
 ## About ##
 
+## Implementation ##
+
+### Parser ###
+
+### Import of parser ###
+```
+from plaso.parsers import defender_hunting
+```
+
+### timeliner.yaml ###
+```
+---
+data_type: 'defender:advanced_hunting:line'
+attribute_mappings:
+- name: 'timestamp'
+  description: 'Timestamp'
+place_holder_event: true
+```
+
+### Formatrer ###
+
 ## Required KQL ##
 
 ```
