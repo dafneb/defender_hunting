@@ -38,7 +38,7 @@ source: 'M365 Advanced Hunting'
 type: 'conditional'
 data_type: 'defender:advanced_hunting:connsuccess'
 message:
-- 'Connection failed for process {initiatingprocessfilename}'
+- 'Connection successfull for process {initiatingprocessfilename}'
 - ' Folder path: {initiatingprocessfolderpath}'
 - ' Connection: {protocol}'
 - ' {localip}'
