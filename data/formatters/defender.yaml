@@ -13,7 +13,7 @@ type: 'conditional'
 data_type: 'defender:advanced_hunting:asrtheftaudited'
 message:
 - 'ASR - Credential theft audited for process: {filename}'
-- ' Folder path: {folderpath}'
+- 'Folder path: {folderpath}'
 short_message:
 - 'ASR - Credential theft audited for process {filename}'
 short_source: 'EVT'
@@ -23,13 +23,13 @@ type: 'conditional'
 data_type: 'defender:advanced_hunting:connfailed'
 message:
 - 'Connection failed for process {initiatingprocessfilename}'
-- ' Folder path: {initiatingprocessfolderpath}'
-- ' Connection: {protocol}'
-- ' {localip}'
-- ':{localport}'
-- ' -> {remoteip}'
-- ':{remoteport}'
-- ' URL: {remoteurl}'
+- 'Folder path: {initiatingprocessfolderpath}'
+- 'Connection: {protocol} -'
+- '{localip}'
+- ': {localport}'
+- '-> {remoteip}'
+- ': {remoteport}'
+- 'URL: {remoteurl}'
 short_message:
 - 'Connection failed for process {initiatingprocessfilename}'
 short_source: 'EVT'
@@ -39,14 +39,93 @@ type: 'conditional'
 data_type: 'defender:advanced_hunting:connsuccess'
 message:
 - 'Connection successfull for process {initiatingprocessfilename}'
-- ' Folder path: {initiatingprocessfolderpath}'
-- ' Connection: {protocol}'
-- ' {localip}'
-- ':{localport}'
-- ' -> {remoteip}'
-- ':{remoteport}'
-- ' URL: {remoteurl}'
+- 'Folder path: {initiatingprocessfolderpath}'
+- 'Connection: {protocol}'
+- '{localip}'
+- ': {localport}'
+- '-> {remoteip}'
+- ': {remoteport}'
+- 'URL: {remoteurl}'
 short_message:
 - 'Connection successfull for process {initiatingprocessfilename}'
+short_source: 'EVT'
+source: 'M365 Advanced Hunting'
+---
+type: 'conditional'
+data_type: 'defender:advanced_hunting:dnsinspected'
+message:
+- 'DNS query inspected: {dnsquery}'
+short_message:
+- 'DNS query inspected: {dnsquery}'
+short_source: 'EVT'
+source: 'M365 Advanced Hunting'
+---
+type: 'conditional'
+data_type: 'defender:advanced_hunting:icmpinspected'
+message:
+- 'ICMP inspected ({remoteip})'
+short_message:
+- 'ICMP inspected ({remoteip})'
+short_source: 'EVT'
+source: 'M365 Advanced Hunting'
+---
+type: 'conditional'
+data_type: 'defender:advanced_hunting:inconnaccept'
+message:
+- 'Inbound connection accepted by process {initiatingprocessfilename}'
+- 'from {remoteip}'
+- 'at port {localport} / '
+- '{protocol}'
+short_message:
+- 'Inbound connection accepted by process {initiatingprocessfilename}'
+short_source: 'EVT'
+source: 'M365 Advanced Hunting'
+---
+type: 'conditional'
+data_type: 'defender:advanced_hunting:listenconncreated'
+message:
+- 'Process {initiatingprocessfilename} created listening socket'
+- 'at port {localport} / '
+- '{protocol}'
+short_message:
+- 'Process {initiatingprocessfilename} created listening socket'
+short_source: 'EVT'
+source: 'M365 Advanced Hunting'
+---
+type: 'conditional'
+data_type: 'defender:advanced_hunting:powershellcommand'
+message:
+- 'PowerShell command: {powershellcommand}'
+short_message:
+- 'PowerShell command: {powershellcommand}'
+short_source: 'EVT'
+source: 'M365 Advanced Hunting'
+---
+type: 'conditional'
+data_type: 'defender:advanced_hunting:processcreated'
+message:
+- 'Process {filename} created'
+- 'by process {initiatingprocessfilename}'
+short_message:
+- 'Process {filename} created'
+short_source: 'EVT'
+source: 'M365 Advanced Hunting'
+---
+type: 'conditional'
+data_type: 'defender:advanced_hunting:processcreatedwmi'
+message:
+- 'Process created using WMI query'
+short_message:
+- 'Process created using WMI query'
+short_source: 'EVT'
+source: 'M365 Advanced Hunting'
+---
+type: 'conditional'
+data_type: 'defender:advanced_hunting:serviceinstalled'
+message:
+- 'Service {filename} installed'
+- 'by {initiatingprocessfilename}'
+short_message:
+- 'Service {filename} installed'
 short_source: 'EVT'
 source: 'M365 Advanced Hunting'
