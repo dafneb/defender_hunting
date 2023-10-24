@@ -23,3 +23,51 @@ attribute_mappings:
 - name: 'timestamp'
   description: 'Timestamp'
 place_holder_event: true
+---
+data_type: 'defender:advanced_hunting:dnsinspected'
+attribute_mappings:
+- name: 'timestamp'
+  description: 'Timestamp'
+place_holder_event: true
+---
+data_type: 'defender:advanced_hunting:icmpinspected'
+attribute_mappings:
+- name: 'timestamp'
+  description: 'Timestamp'
+place_holder_event: true
+---
+data_type: 'defender:advanced_hunting:inconnaccept'
+attribute_mappings:
+- name: 'timestamp'
+  description: 'Timestamp'
+place_holder_event: true
+---
+data_type: 'defender:advanced_hunting:listenconncreated'
+attribute_mappings:
+- name: 'timestamp'
+  description: 'Timestamp'
+place_holder_event: true
+---
+data_type: 'defender:advanced_hunting:powershellcommand'
+attribute_mappings:
+- name: 'timestamp'
+  description: 'Timestamp'
+place_holder_event: true
+---
+data_type: 'defender:advanced_hunting:processcreated'
+attribute_mappings:
+- name: 'timestamp'
+  description: 'Timestamp'
+place_holder_event: true
+---
+data_type: 'defender:advanced_hunting:processcreatedwmi'
+attribute_mappings:
+- name: 'timestamp'
+  description: 'Timestamp'
+place_holder_event: true
+---
+data_type: 'defender:advanced_hunting:serviceinstalled'
+attribute_mappings:
+- name: 'timestamp'
+  description: 'Timestamp'
+place_holder_event: true
