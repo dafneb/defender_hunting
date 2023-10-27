@@ -5,9 +5,7 @@ Plaso (log2timeline) - Parser for M365 Defender Advanced hunting export file
 
 This is custom parser which allows add to timeline export of results from Advanced hunting at M365 Defender. That's why you can see some additional informations, which can provide better overview.
 
-Parser is created for [Named Link](https://plaso.readthedocs.io/en/latest/index.html "Plaso (log2timeline)") and it was tested with actually latest [Named Link](https://github.com/log2timeline/plaso/releases/tag/20230717 "release (20230717)").
-
-- - - -
+Parser is created for [Plaso (log2timeline)](https://plaso.readthedocs.io/en/latest/index.html "Plaso (log2timeline)") and it was tested with actually latest [release (20230717)](https://github.com/log2timeline/plaso/releases/tag/20230717 "release (20230717)").
 
 ## Implementation 
 
@@ -27,7 +25,7 @@ from plaso.parsers import defender_hunting
 
 ### 3) Timeliner
 
-You can take content for adjust ***data/timeliner.yaml*** from [Named Link](https://github.com/dafneb/defender_hunting/blob/main/data/timeliner.yaml "file") or just copy text below.
+You can take content for adjust ***data/timeliner.yaml*** from [file](https://github.com/dafneb/defender_hunting/blob/main/data/timeliner.yaml "timeliner.yaml") or just copy text below.
 
 ```
 ---
@@ -107,8 +105,6 @@ place_holder_event: true
 ### 4) Formatter 
 
 Just copy formatter **defender.yaml** to folder ***data/formatters/***.
-
-- - - -
 
 ## Usage 
 
