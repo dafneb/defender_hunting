@@ -134,7 +134,7 @@ union DeviceProcessEvents, DeviceNetworkEvents, DeviceEvents
 
 Then export results.
 
-### Log2timeline / psort.py
+### Log2timeline
 
 If implementation was sucessfull, then use "defender_hunting" at parameter "--parsers".
 
